@@ -1,0 +1,98 @@
+/* Variables de color */
+:root {
+    --color-background: #f5f5f5; /* Fondo claro */
+    --color-primary: #6f4e37;    /* Marrón oscuro */
+    --color-secondary: #a67c52;  /* Marrón medio */
+    --color-accent: #e6ad74;     /* Marrón claro */
+    --color-white: #ffffff;
+}
+
+/* Reset básico */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos de la página */
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-primary);
+}
+
+/* Estilos de la introducción */
+.intro {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: var(--color-white);
+    text-align: center;
+    padding: 50px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.intro-content {
+    max-width: 800px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.intro-title {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.intro-text {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.intro-btn {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.intro-btn:hover {
+    background-color: var(--color-secondary);
+}
+
+
+/* Botón de inicio de sesión */
+.login-btn-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.login-btn {
+    padding: 12px 25px;
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.login-btn:hover {
+    background-color: var(--color-accent);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}

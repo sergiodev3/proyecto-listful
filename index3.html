@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Tareas</title>
+    <style>
+      :root {
+        --color-primary: #6f4e37; /* Marrón oscuro */
+        --color-secondary: #a67c52; /* Marrón medio */
+        --color-accent: #ddbc9b; /* Marrón claro */
+        --color-background: #f7f3e9; /* Beige claro */
+        --color-white: #ffffff;
+      }
+
+      /* Reset */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: var(--color-background);
+        color: var(--color-primary);
+        line-height: 1.6;
+      }
+
+      .header {
+        background-color: var(--color-primary);
+        color: var(--color-white);
+        text-align: center;
+        padding: 20px;
+      }
+
+      .header-logo {
+        width: 80px;
+        margin-bottom: 10px;
+      }
+
+      .header-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+      }
+
+      .header-subtitle {
+        font-size: 1.2rem;
+        font-style: italic;
+      }
+
+      .main-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: var(--color-white);
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .section-title {
+        color: var(--color-primary);
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      /* Estilos de botones */
+      .task-status-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .task-status-btn {
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        background-color: #6f4e37; /* Marrón oscuro */
+        color: #fff;
+        border: 2px solid #6f4e37;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: capitalize;
+      }
+
+      .task-status-btn:hover {
+        background-color: #a67c52;
+        border-color: #a67c52;
+        transform: scale(1.1);
+      }
+
+      .task-status-btn.active {
+        background-color: #241a13; /* Color destacado */
+        color: white;
+        font-weight: bold;
+        border-radius: 5px;
+      }
+
+      .no-tasks-message {
+        text-align: center;
+        font-size: 1.2rem;
+        color: #6f4e37; /* Marrón oscuro */
+        margin-top: 20px;
+        font-style: italic;
+      }
+
+      /* Estilo de la lista de tareas */
+      .task-list {
+        list-style: none;
+        margin-top: 20px;
+        padding: 0;
+      }
+
+      .task-list li {
+        background-color: var(--color-accent);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .task-list li:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      .task-list li .task-name {
+        font-weight: bold;
+        color: var(--color-primary);
+      }
+
+      .task-list li .task-date {
+        font-size: 0.9rem;
+        color: var(--color-secondary);
+      }
+
+      .task-btns {
+        display: flex;
+        gap: 10px;
+      }
+
+      .task-btn {
+        padding: 8px 12px;
+        font-size: 1rem;
+        background-color: var(--color-primary);
+        color: var(--color-white);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .task-btn.done-btn {
+        background-color: #28a745; /* Verde para realizado */
+      }
+
+      .task-btn.done-btn:hover {
+        background-color: #218838;
+      }
+
+      .task-btn.delete-btn {
+        background-color: #dc3545; /* Rojo para eliminar */
+      }
+
+      .task-btn.delete-btn:hover {
+        background-color: #c82333;
+      }
+
+      /* Estilo del formulario */
+      .task-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .task-input {
+        padding: 12px;
+        font-size: 1rem;
+        border: 1px solid var(--color-accent);
+        border-radius: 5px;
+        background-color: var(--color-background);
+      }
+
+      .task-submit-btn {
+        padding: 12px;
+        font-size: 1rem;
+        background-color: var(--color-secondary);
+        color: var(--color-white);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .task-submit-btn:hover {
+        background-color: var(--color-primary);
+      }
+
+      /* Footer */
+      .footer {
+        background-color: var(--color-primary);
+        color: var(--color-white);
+        padding: 20px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <img src="logo.jfif" alt="Logo ListFul" class="header-logo" />
+      <h1 class="header-title">ListFul</h1>
+      <p class="header-subtitle">Organiza tus Pendientes y Compromisos</p>
+    </header>
+
+    <div class="main-container">
+      <section id="task-form-section">
+        <h2 class="section-title">Agregar Nueva Tarea</h2>
+        <form id="taskForm" class="task-form">
+          <input
+            type="text"
+            id="taskName"
+            class="task-input"
+            placeholder="Nombre de la tarea"
+            required />
+          <input
+            type="datetime-local"
+            id="taskDate"
+            class="task-input"
+            required />
+          <button type="submit" class="task-submit-btn">Agregar tarea</button>
+        </form>
+      </section>
+
+      <section id="task-list-section">
+        <h2 class="section-title">Mis Tareas</h2>
+        <div class="task-status-buttons">
+          <button class="task-status-btn" id="showPendingBtn">
+            Pendientes
+          </button>
+          <button class="task-status-btn" id="showDoneBtn">Realizadas</button>
+          <button class="task-status-btn" id="showOverdueBtn">Vencidas</button>
+        </div>
+        <ul id="tasksContainer" class="task-list">
+          <!-- Las tareas aparecerán aquí -->
+        </ul>
+      </section>
+    </div>
+
+    <footer class="footer">
+      <p>&copy; 2024 ListFul. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+      // Función para cargar las tareas desde localStorage
+      function loadTasks() {
+        const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+        const tasksContainer = document.getElementById("tasksContainer");
+        const activeButton = document.querySelector(".task-status-btn.active"); // Detectar el botón activo
+        tasksContainer.innerHTML = ""; // Limpiar antes de cargar nuevas tareas
+
+        // Si hay un botón activo, cargar las tareas según su estado
+        if (activeButton) {
+          const status = activeButton.id.replace("show", "").toLowerCase(); // Obtener el estado desde el ID del botón
+          filterTasks(status);
+        } else {
+          // Si no hay un botón activo, mostrar todas las tareas (opcional)
+          tasks.forEach((task) => {
+            if (new Date(task.dueDate) < new Date() && task.status !== "done") {
+              task.status = "overdue";
+            }
+            createTaskElement(task); // Mostrar la tarea en su estado correspondiente
+          });
+        }
+      }
+
+      // Función para guardar las tareas en localStorage
+      function saveTasks(tasks) {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+      }
+
+      // Función para crear una tarea en la interfaz
+      function createTaskElement(task) {
+        const tasksContainer = document.getElementById("tasksContainer");
+
+        const taskElement = document.createElement("li");
+        taskElement.classList.add(task.status); // Añadir clase según el estado
+
+        const taskName = document.createElement("span");
+        taskName.classList.add("task-name");
+        taskName.textContent = task.name;
+
+        const taskDate = document.createElement("span");
+        taskDate.classList.add("task-date");
+        taskDate.textContent = `Vence: ${new Date(
+          task.dueDate
+        ).toLocaleString()}`;
+
+        const taskBtns = document.createElement("div");
+        taskBtns.classList.add("task-btns");
+
+        // Botón de "Realizar"
+        if (task.status === "pending") {
+          const doneBtn = document.createElement("button");
+          doneBtn.classList.add("task-btn", "done-btn");
+          doneBtn.textContent = "Marcar como realizada";
+          doneBtn.addEventListener("click", () =>
+            markAsDone(task, taskElement)
+          );
+          taskBtns.appendChild(doneBtn);
+        }
+
+        // Botón de eliminación
+        const deleteBtn = document.createElement("button");
+        deleteBtn.classList.add("task-btn", "delete-btn");
+        deleteBtn.textContent = "Eliminar";
+        deleteBtn.addEventListener("click", () =>
+          deleteTask(task, taskElement)
+        );
+        taskBtns.appendChild(deleteBtn);
+
+        taskElement.appendChild(taskName);
+        taskElement.appendChild(taskDate);
+        taskElement.appendChild(taskBtns);
+        tasksContainer.appendChild(taskElement);
+      }
+
+      // Función para marcar la tarea como realizada
+      function markAsDone(task, taskElement) {
+        const tasks = getTasks();
+        const taskIndex = tasks.findIndex(
+          (t) => t.name === task.name && t.dueDate === task.dueDate
+        );
+
+        if (taskIndex > -1) {
+          tasks[taskIndex].status = "done"; // Actualizar el estado en array
+          saveTasks(tasks); // guardar cambios
+          loadTasks(); // cargar de nuevo
+        }
+      }
+
+      // Función para eliminar una tarea
+      function deleteTask(task, taskElement) {
+        const tasks = getTasks();
+        const updatedTasks = tasks.filter(
+          (t) => t.name !== task.name || t.dueDate !== task.dueDate
+        );
+
+        saveTasks(updatedTasks); // cambios en localStorage
+        loadTasks(); // Recargar para reflejar los cambios
+      }
+
+      // Función para obtener tareas del localStorage
+      function getTasks() {
+        return JSON.parse(localStorage.getItem("tasks")) || [];
+      }
+
+      // Función para manejar la activación visual de los botones
+      function setActiveButton(buttonId) {
+        const buttons = document.querySelectorAll(".task-status-btn");
+        buttons.forEach((btn) => btn.classList.remove("active")); // Quitar clase active de todos
+        const activeButton = document.getElementById(buttonId);
+        activeButton.classList.add("active"); // Agregar clase active al botón actual
+      }
+
+      // Función para filtrar tareas según su estado, mostrando un mensaje si no hay tareas
+      function filterTasks(status) {
+        const tasks = getTasks();
+        const tasksContainer = document.getElementById("tasksContainer");
+        tasksContainer.innerHTML = ""; // Limpiar las tareas existentes
+
+        const filteredTasks = tasks.filter((task) => task.status === status);
+
+        if (filteredTasks.length === 0) {
+          const message = document.createElement("p");
+          message.classList.add("no-tasks-message");
+
+          // Mensajes específicos para cada estado
+          switch (status) {
+            case "pending":
+              message.textContent = "No tienes tareas pendientes.";
+              break;
+            case "done":
+              message.textContent = "No tienes tareas realizadas.";
+              break;
+            case "overdue":
+              message.textContent = "No tienes tareas vencidas.";
+              break;
+          }
+          tasksContainer.appendChild(message);
+        } else {
+          filteredTasks.forEach((task) => createTaskElement(task));
+        }
+      }
+
+      // Añadir eventos a los botones para manejar el filtro y la clase active
+      document
+        .getElementById("showPendingBtn")
+        .addEventListener("click", () => {
+          setActiveButton("showPendingBtn");
+          filterTasks("pending");
+        });
+
+      document.getElementById("showDoneBtn").addEventListener("click", () => {
+        setActiveButton("showDoneBtn");
+        filterTasks("done");
+      });
+
+      document
+        .getElementById("showOverdueBtn")
+        .addEventListener("click", () => {
+          setActiveButton("showOverdueBtn");
+          filterTasks("overdue");
+        });
+
+      // Manejar la creación de nuevas tareas
+      document
+        .getElementById("taskForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const taskName = document.getElementById("taskName").value.trim();
+          const taskDate = new Date(document.getElementById("taskDate").value);
+
+          const now = new Date();
+
+          // Validación de fecha y hora
+          if (!taskName) {
+            alert("El nombre de la tarea no puede estar vacío.");
+            return;
+          }
+          if (taskDate <= now) {
+            alert("La fecha y hora deben ser futuras.");
+            return;
+          }
+
+          const task = {
+            id: Date.now(), // Identificador único
+            name: taskName,
+            dueDate: taskDate.toISOString(),
+            status: "pending", // El estado inicial es pendiente
+          };
+
+          const tasks = getTasks();
+          tasks.push(task);
+          saveTasks(tasks);
+
+          createTaskElement(task); // Mostrar la tarea recién añadida
+
+          document.getElementById("taskName").value = "";
+          document.getElementById("taskDate").value = "";
+        });
+
+      // Cargar las tareas al iniciar
+      loadTasks();
+
+      document.addEventListener("DOMContentLoaded", () => {
+        setActiveButton("showPendingBtn"); // Botón predeterminado
+        filterTasks("pending"); // Mostrar solo tareas pendientes al cargar
+      });
+    </script>
+  </body>
+</html>
